@@ -1,7 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.30;
 
-  
 import "openzeppelin-contracts/contracts/token/ERC20/IERC20.sol";
 import "openzeppelin-contracts/contracts/token/ERC20/utils/SafeERC20.sol";
 
@@ -9,12 +8,9 @@ contract IntentExecutor {
     using SafeERC20 for IERC20;
 
     event Executed(
-        address indexed user,
-        address indexed tokenIn, 
-        address indexed tokenOut,
-        uint256 amountIn,
-        uint256 amountOut
+        address indexed user, address indexed tokenIn, address indexed tokenOut, uint256 amountIn, uint256 amountOut
     );
+
     /**
      * @notice Executes swap / bridge calldata built offchain (LI.FI)
      */
@@ -37,7 +33,7 @@ contract IntentExecutor {
         uint256 beforeBal = IERC20(tokenOut).balanceOf(address(this));
 
         // execute calldata (LI.FI / Uniswap)
-        (bool ok, ) = target.call{value: msg.value}(data);
+        (bool ok,) = target.call{value: msg.value}(data);
         require(ok, "execution failed");
 
         uint256 afterBal = IERC20(tokenOut).balanceOf(address(this));
